@@ -7,28 +7,30 @@
           <div class="item">
             <img src="../image/Logo.png">
           </div>
-          <a class="item" href="#shouye" :class="{active: isActive === 1}" @click="changeClass(1)">
-            首页
-          </a>
-          <a class="item" href="#blog" :class="{active: isActive === 2}" @click="changeClass(2)">
+          <a class="item" :class="{active: isActive === 1}" @click="changerouter('/','#shouye',1)">
+              首页
+            </a>
+
+          <a class="item" :class="{active: isActive === 2}" @click="changerouter('/','#blog',2)">
             博客
           </a>
-          <a class="item" href="#youlian" :class="{active: isActive === 3}" @click="changeClass(3)">友链 </a>
-          <a class="item" href="#aboutus" :class="{active: isActive === 4}" @click="changeClass(4)">
-            关于我们
-          </a>
+          <a class="item" :class="{active: isActive === 3}" @click="changerouter('/','#youlian',3)">友链 </a>
+          <a class="item" :class="{active: isActive === 4}" @click="changerouter('/','#about',4)">关于我们 </a>
+          <!-- <a class="item" :class="{active: isActive === 6}" @click="changerouter('/','#aboutus',6)">???</a> -->
           <div class="right menu">
-            <a class="item">登录</a>
+            <a class="item" :class="{active: isActive === 5}" @click="changerouter('/login','#shouye',5)">
+            登录
+            </a>
           </div>
         </div>
       </div>
       <div>
         <div id="nav">
-          <router-link to="/"></router-link>
-          <router-link to="/about"></router-link>
+          <!-- <router-link to="/"></router-link> -->
         </div>
         <router-view></router-view>
       </div>
+      <div class="end" id="aboutus"></div>
     </div>
   </div>
 
@@ -52,8 +54,23 @@ export default {
     }
   },
   methods: {
+    anchorPoint(idName){
+        document.querySelector(idName).scrollIntoView(true);
+     },
     changeClass(i) {
-    this.isActive = i;
+      this.isActive = i;
+    },
+    changerouter(name,loc,id){
+      this.$router.replace(name).catch(err => err);
+      if(this.isActive==5){
+        this.isActive=1;
+      }
+      console.log(this.isActive);
+      this.changeloc(loc,id)
+    },
+    changeloc(loc,id){
+      this.anchorPoint(loc);
+      this.changeClass(id);
     },
     getMsg:function(){
         var user = 4;
@@ -166,5 +183,15 @@ header{
     font-size: 34px;
     font-family: sans-serif;
     color: white;
+}.clicka {
+  line-height: 30px;
+
+  text-decoration: none;
+
+  display: block;
+
+  /*跟随父元素的高度*/
+
+  height: inherit;
 }
 </style>
