@@ -10,7 +10,7 @@
         </h2>
       </div>
       <div class="background" id="shouye">
-        <img src="../../image/test2.jpg" style="display: block; width: 100%;"></img>
+        <img class="allimages" src="../../image/test2.jpg" style="display: block; width: 100%;"></img>
       </div>
 
     </header>
@@ -64,7 +64,7 @@
           </div>
         </div>
         <div class="background" style="display: block; width: 100%;height: 1200px;">
-          <img src="../../image/bg2.jpg"></img>
+          <img class="allimages" src="../../image/bg2.jpg"></img>
         </div>
       </div>
 
@@ -101,7 +101,7 @@
           </div>
         </div>
         <div class="background" style="display: block; width: 100%;height: 900px;">
-          <img src="../../image/bg3.jpg"></img>
+          <img class="allimages" src="../../image/bg3.jpg"></img>
         </div>
       </div>
 
@@ -139,7 +139,7 @@
           </div>
         </div>
         <div class="background" style="display: block; width: 100%;height: 900px;">
-          <img src="../../image/bg4.jpg"></img>
+          <img class="allimages" src="../../image/bg4.jpg"></img>
         </div>
       </div>
     </div>
@@ -233,7 +233,11 @@ header {
   color: #fff;
   background: rgba(1, 17, 27, 0.5);
   width: 100%;
+  height: auto;
   overflow: hidden;
+}
+.allimages{
+  width: 100%;
 }
 
 .background {
@@ -241,7 +245,6 @@ header {
   top: 0px;
   right: 0px;
   width: 100%;
-  height: 100%;
   z-index: -1;
   filter: blur(4px);
   transform: scale(1.2);
@@ -261,7 +264,7 @@ header {
   color: #fff;
   background: rgba(1, 17, 27, 0.1);
   width: 100%;
-  height: 1000px;
+  height: 870px;
   overflow: hidden;
 }
 

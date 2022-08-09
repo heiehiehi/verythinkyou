@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="site">
-      <div class="ui gery inverted fixed secondary stackable menu">
+      <div class="ui gery inverted fixed secondary stackable menu" style="background: rgba(102,204,255,0.3)">
         <!-- <div class="ui container"> -->
         <div class="ui container">
           <div class="item">
@@ -77,7 +77,7 @@ export default {
         let formdata = new FormData();
         const json = JSON.stringify(this.msg);
         formdata.append("user",new Blob([json], {type: 'application/json'}));
-        
+
         formdata.append("token","eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI4NzM3NTc4IiwiaWF0IjoxNjU5NDMzODk4LCJleHAiOjE2NTk1MjAyOTh9.Tikn-XdDyTWRXzBtYTqksjeFDNC_V-N5SagDkLpMA6s");
 
         let config = {
@@ -99,7 +99,7 @@ export default {
           console.log(res)
         })
         .catch(err => {
-          console.error(err); 
+          console.error(err);
         })
         console.log("发送成功")
     }
@@ -125,6 +125,9 @@ header{
   width: 100%;
   overflow: hidden;
 }
+.allimages{
+  width: 100%;
+}
 .background{
   position: absolute;
   top: 0px;
@@ -135,6 +138,7 @@ header{
   filter: blur(4px);
   transform: scale(1.2);
 }
+
 .end{
     position: relative;
     color: rgb(43, 43, 43);
