@@ -50,95 +50,10 @@
                 <blog-context msg="这里是博客哦"></blog-context>
               </div>
               <div class="three wide column">
-                <div class="ui feed column" style="background: white;padding: 8px;margin-right: -12px;margin-top: 0px">
-                  <div class="event">
-                    <div class="label">
-                      <img src="/images/avatar/small/elliot.jpg">
-                    </div>
-                    <div class="content">
-                      <div class="summary">
-                        <a class="user">
-                          Elliot Fu
-                        </a> added you as a friend
-                        <div class="date">1 小时前 </div>
-                      </div>
-                      <div class="meta">
-                        <a class="like">
-                          <i class="like icon"></i> 4 Likes
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="event">
-                    <div class="label">
-                      <img src="/images/avatar/small/helen.jpg">
-                    </div>
-                    <div class="content">
-                      <div class="summary"><a>Helen Troy</a> 增加 <a>2 新的 illustrations</a> <div class="date">4 天前 </div>
-                      </div>
-                      <div class="extra images">
-                        <a><img src="/images/wireframe/image.png"></a>
-                        <a><img src="/images/wireframe/image.png"></a>
-                      </div>
-                      <div class="meta">
-                        <a class="like">
-                          <i class="like icon"></i> 1 Like
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="event">
-                    <div class="label">
-                      <img src="/images/avatar/small/jenny.jpg">
-                    </div>
-                    <div class="content">
-                      <div class="summary"><a class="user"> Jenny Hess </a> 将你加为好友 <div class="date">2 天前 </div>
-                      </div>
-                      <div class="meta">
-                        <a class="like">
-                          <i class="like icon"></i> 8 Likes
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="event">
-                    <div class="label">
-                      <img src="/images/avatar/small/joe.jpg">
-                    </div>
-                    <div class="content">
-                      <div class="summary">
-                        <a>Joe Henderson</a> posted on his page
-                        <div class="date">3 天前 </div>
-                      </div>
-                      <div class="extra text">
-                        Ours is a life of constant reruns. We're always circling back to where we'd we started, then starting all over again. Even if we don't run extra laps that day, we surely will come back for more of the same another day soon.
-                      </div>
-                      <div class="meta">
-                        <a class="like">
-                          <i class="like icon"></i> 5 Likes
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="event">
-                    <div class="label">
-                      <img src="/images/avatar/small/justen.jpg">
-                    </div>
-                    <div class="content">
-                      <div class="summary"><a>Justen Kitsune</a> 上传 <a>2 张关于你的照片</a> <div class="date">4 天前 </div>
-                      </div>
-                      <div class="extra images">
-                        <a><img src="/images/wireframe/image.png"></a>
-                        <a><img src="/images/wireframe/image.png"></a>
-                      </div>
-                      <div class="meta">
-                        <a class="like">
-                          <i class="like icon"></i> 41 Likes
-                        </a>
-                      </div>
-                    </div>
-                  </div>
+                <div>
+                  <PersonDy></PersonDy>
                 </div>
+
               </div>
             </div>
           </div>
@@ -156,12 +71,14 @@
 import BlogContext from '@/components/BlogContext.vue'
 import PersonSimple from '@/components/PersonSimple.vue'
 import PersonIntro from '@/components/PersonIntro.vue'
+import PersonDy from '@/components/PersonDy.vue'
 export default {
   name: 'Person',
   components: {
     BlogContext,
     PersonSimple,
-    PersonIntro
+    PersonIntro,
+    PersonDy
   }
 }
 </script>

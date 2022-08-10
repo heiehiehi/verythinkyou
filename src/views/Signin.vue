@@ -8,43 +8,37 @@
           <div class="ui internally grid">
             <div class="ui raised column" style="margin: 0 10%;width: 80%;">
               <div class="ui placeholder segment">
-                <div class="ui two column very relaxed stackable grid">
-                  <div class="column">
-                    <div class="ui form">
-                      <div class="field">
-                        <label>Username</label>
-                        <div class="ui left icon input">
-                          <input type="text" placeholder="Username">
-                          <i class="user icon"></i>
-                        </div>
-                      </div>
-                      <div class="field">
-                        <label>Password</label>
-                        <div class="ui left icon input">
-                          <input type="password">
-                          <i class="lock icon"></i>
-                        </div>
-                      </div>
-                      <div class="ui blue submit button">Login</div>
-                    </div>
+                <h3 style="color: black">好好填写信息喵~~QWQ</h3>
+                <form class="ui form">
+                  <div class="field">
+                    <label>Name</label>
+                    <input type="text" name="first-name" placeholder="Name">
                   </div>
-                  <div class="middle aligned column">
-                    <div class="ui big button">
-                      <i class="signup icon"></i>
-                      Sign Up
-                    </div>
+                  <div class="field">
+                    <label>电子邮箱</label>
+                    <input type="email" placeholder="joe@schmoe.com">
                   </div>
-                </div>
-                <div class="ui vertical divider">
-                  Or
-                </div>
+                  <div class="field">
+                    <label>手机号</label>
+                    <input type="text" name="Phonenumber" placeholder="Phonenumber">
+                  </div>
+                  <div class="field">
+                    <label>密码</label>
+                    <input type="password" name="Password" placeholder="Password">
+                  </div>
+                  <div class="field">
+                    <label>再次确认密码</label>
+                    <input type="password">
+                  </div>
+                  <button class="ui button" type="submit">Submit</button>
+                </form>
               </div>
 
             </div>
           </div>
         </div>
         <div class="background" style="display: block; width: 100%;height: 1200px;">
-          <img class="allimages" src="../../image/loginbg.jpg"></img>
+          <img class="allimages" src="../../image/bg6.jpg"></img>
         </div>
       </div>
 
@@ -58,7 +52,7 @@
 
 <script>
 export default {
-  name: 'PersonSimple',
+  name: 'Signin',
   props: {
     msg: String
   },

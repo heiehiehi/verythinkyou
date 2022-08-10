@@ -17,10 +17,22 @@
           <a class="item" :class="{active: isActive === 3}" @click="changerouter('/','#youlian',3)">友链 </a>
           <a class="item" :class="{active: isActive === 4}" @click="changerouter('/','#about',4)">关于我们 </a>
           <!-- <a class="item" :class="{active: isActive === 6}" @click="changerouter('/','#aboutus',6)">???</a> -->
-          <div class="right menu">
+          <div class="right menu" v-if="!login">
             <a class="item" :class="{active: isActive === 5}" @click="changerouter('/login','#shouye',5)">
             登录
             </a>
+          </div>
+          <div class="right menu" v-if="login">
+            <el-dropdown style="margin:0 auto;display: inline-block">
+              <div class="item label" >
+                <a  type="primary"><img class="ui mini avatar image" src="../image/www.jpg"></a>
+              </div>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item><div @click="intoPersonCenter">个人中心</div></el-dropdown-item>
+                <el-dropdown-item v-if="msg.pro===2"><div @click="IntoSignin">注册账号</div></el-dropdown-item>
+                <el-dropdown-item><div @click="exit">退出</div></el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
           </div>
         </div>
       </div>
@@ -41,6 +53,9 @@
 export default {
   data () {
     return {
+      token:'',
+      login:true,
+
       isActive:1,
       msg:{
         id: null,
@@ -50,10 +65,31 @@ export default {
     	  password: "XingHui",
     	  pro: 2,
     	  hide: 0
+      },
+      information:{
+        birthday: 20011114,
+        introduction:'我是自我介绍2333333',
+        photo:'http://localhost:80/Information/photo/zhansan.jpg',
+        creatdate:"2022-07-22 17:13:44",
+        sex:2,
+        school:'清华大学',
+        blog:'3',
+        spacebg:'http://localhost:80/Information/Spacebackground/zhansanSpaceBackground.jpg'
       }
     }
   },
   methods: {
+    IntoSignin(){
+      this.$router.replace("/signin")
+    },
+    intoPersonCenter(){
+      this.$router.replace("/person")
+    },
+    exit(){
+      this.login = false;
+      this.token = null;
+      this.$router.replace("/")
+    },
     anchorPoint(idName){
         document.querySelector(idName).scrollIntoView(true);
      },
