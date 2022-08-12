@@ -17,15 +17,15 @@
           <a class="item" :class="{active: isActive === 3}" @click="changerouter('/','#youlian',3)">友链 </a>
           <a class="item" :class="{active: isActive === 4}" @click="changerouter('/','#about',4)">关于我们 </a>
           <!-- <a class="item" :class="{active: isActive === 6}" @click="changerouter('/','#aboutus',6)">???</a> -->
-          <div class="right menu" v-if="!login">
+          <div class="right menu" v-if="!$store.state.datas.exist">
             <a class="item" :class="{active: isActive === 5}" @click="changerouter('/login','#shouye',5)">
             登录
             </a>
           </div>
-          <div class="right menu" v-if="login">
+          <div class="right menu" v-if="$store.state.datas.exist">
             <el-dropdown style="margin:0 auto;display: inline-block">
               <div class="item label" >
-                <a  type="primary"><img class="ui mini avatar image" src="../image/www.jpg"></a>
+                <a  type="primary"><img class="ui mini avatar image" style="width: 40px;height: 40px;object-fit: cover;" :src="$store.state.datas.user.photo"></a>
               </div>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item><div @click="intoPersonCenter">个人中心</div></el-dropdown-item>
@@ -78,17 +78,28 @@ export default {
       }
     }
   },
+  // mounted () {
+  //   this.$store.dispatch('readload')
+  // },
+  created () {
+      this.$store.dispatch('readload')
+  },
   methods: {
     IntoSignin(){
       this.$router.replace("/signin")
     },
     intoPersonCenter(){
-      this.$router.replace("/person")
+      this.$router.push({
+        path:"/person",
+        query:{data:JSON.stringify(this.$store.state.datas.user.id)}
+      }).catch(err => err);
+      location.reload();
     },
     exit(){
       this.login = false;
       this.token = null;
       this.$router.replace("/")
+      this.$store.dispatch('Deleteddata')
     },
     anchorPoint(idName){
         document.querySelector(idName).scrollIntoView(true);
@@ -101,7 +112,6 @@ export default {
       if(this.isActive==5){
         this.isActive=1;
       }
-      console.log(this.isActive);
       this.changeloc(loc,id)
     },
     changeloc(loc,id){

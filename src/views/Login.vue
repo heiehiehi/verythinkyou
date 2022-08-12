@@ -12,20 +12,20 @@
                   <div class="column">
                     <div class="ui form">
                       <div class="field">
-                        <label>Username</label>
+                        <label>PhoneNumber</label>
                         <div class="ui left icon input">
-                          <input type="text" placeholder="Username">
+                          <input type="text" placeholder="Username" v-model="user.phone">
                           <i class="user icon"></i>
                         </div>
                       </div>
                       <div class="field">
                         <label>Password</label>
                         <div class="ui left icon input">
-                          <input type="password">
+                          <input type="password" v-model="user.password">
                           <i class="lock icon"></i>
                         </div>
                       </div>
-                      <div class="ui blue submit button">Login</div>
+                      <div class="ui submit button" :class="{grey:(!(user.phone&&user.password)),blue:(user.phone&&user.password)}" @click="login">Login</div>
                     </div>
                   </div>
                   <div class="middle aligned column">
@@ -65,36 +65,45 @@ export default {
   data(){
     return{
       editor:false,
-      imageUrl: ''
+      imageUrl: '',
+      user:{
+        phone:'',
+        password:'',
+      }
+
     }
   },
   methods:{
-    updateandcancel(){
-      this.editor = false;
-    },
-    cancelediter(){
-      this.editor = false;
-    },
-    starteditor(){
-      this.editor = !this.editor;
-    },
-    handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw);
-      console.log(this.imageUrl);
-    },
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg';
-      const isLt2M = file.size / 1024 / 1024 < 2;
-
-      if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!');
+    async login(){
+      if (this.user.password&&this.user.phone){
+        var msg = await axios.post(this.serverUrl+'/UserSign',this.user).then(
+          res =>{
+            console.log(res)
+            if (res.data.status==200){
+              this.$notify({
+                title: '成功',
+                message: '恭喜你成功登录哦',
+                type: 'success'
+              });
+              return res.data.data;
+            }
+          }
+        )
+        var photo = await axios.get(this.serverUrl+'/Userdetial'+'/'+msg.user.id).then(
+          res =>{
+            return res.data.data.photo;
+          }
+        )
+        msg.user.photo = photo
+        this.$store.commit('Keepdata',msg);
+        this.$router.replace("/")
       }
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!');
+      else {
+        this.$notify.error({
+          title: '电话号或者密码没填写完整~',
+          message: '请好好输入信息哦'
+        });
       }
-      this.imageUrl = URL.createObjectURL(file.raw);
-      console.log(this.imageUrl);
-      return isJPG && isLt2M;
     }
   }
 }

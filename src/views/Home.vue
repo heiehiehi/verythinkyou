@@ -21,42 +21,39 @@
             <div class="ui fixed stackable grid">
               <div class="five wide column" style="background: white;">
                 <h3 class="ui header" style="margin-top: 5px;">博客用户</h3>
-                <div class="ui placeholder" @click="PersonCenter()" v-for="count in 3" style="margin-left:10px;cursor: pointer;">
-                  <div class="image header">
-                    <div class="line">我草草草</div>
-                    <div class="line"></div>
+                <h2 class="ui header" @click="PersonCenter(item)" v-for="(item,index) in this.Usermsg" :key="item.id" style="margin-left:10px;cursor: pointer;text-align: left">
+                  <img class="ui avatar image" style="width: 50px;height: 50px;object-fit: cover;" :src="item.information.photo">
+                  <div class="content">
+                    {{ item.username }}
+                    <div class="sub header">{{item.information.introduction}}</div>
                   </div>
-                  <div class="paragraph">
-                    <div class="medium line"></div>
-                    <div class="short line"></div>
-                  </div>
-                </div>
-                <el-pagination background layout="prev, pager, next" :total="20"
+                </h2>
+                <el-pagination @current-change="handleCurrentChange" :current-page="Usermsgtotal.cur" background layout="prev, pager, next" :page-size="Usermsgtotal.size" :total="Usermsgtotal.total"
                   style="text-align: center;margin-top: 20px;">
                 </el-pagination>
               </div>
               <div class="ten wide column" style="background-color: white; text-align: left;margin-left: 5%;">
                 <h3 class="ui header" style="text-align: center;margin-top: 5px;">博客文章</h3>
                 <div class="ui items">
-                  <div class="item" v-for="count in 5" style="margin-left:10px">
+                  <div class="item" v-for="(item,index) in this.Blogmsg" :key="item.id" style="margin-left:10px">
                     <div class="image">
-                      <img src="/images/wireframe/image.png">
+                      <img style="width: 100%;height: 64px;object-fit: cover;" :src="item.background">
                     </div>
                     <div class="content">
-                      <a class="header">标题</a>
+                      <a class="header">{{item.title}}</a>
                       <div class="meta">
-                        <span>Description</span>
+                        <span>{{item.lastdate}}</span>
                       </div>
                       <div class="description">
                         <p></p>
                       </div>
                       <div class="extra">
-                        Additional Details
+                        {{item.username}}
                       </div>
                     </div>
                   </div>
-                  <el-pagination background layout="prev, pager, next" :total="1000"
-                    style="text-align: center;margin-top: 20px;">
+                  <el-pagination @current-change="handleBlogCurrentChange" :current-page="Blogtotal.cur" background layout="prev, pager, next" :page-size="Blogtotal.size" :total="Blogtotal.total"
+                                 style="text-align: center;margin-top: 20px;">
                   </el-pagination>
                 </div>
               </div>
@@ -74,27 +71,45 @@
             <div class="column" style="background-color: white;padding: 30px;text-align: center;">
               <h3 class="ui header" style="margin-top: 5px;">友情链接</h3>
               <div class="ui three column grid">
-                <div class="row" v-for="count in 2">
-                  <div class="column" v-for="count in 3">
+                <div class="row">
+                  <div class="column" v-for="(item, index) in friends.slice(0, 3)">
                     <div class="ui card" style="display:inline-block">
                       <div class="content">
-                        <div class="center aligned header">Jenny Hess</div>
+                        <div class="center aligned header"><a :href="'http://'+item.web">{{item.web}}</a></div>
                         <div class="center aligned description">
-                          <p>Jenny是一名在该新学校学习媒体管理的在校生。</p>
+                          <p>{{item.introduce}}</p>
                         </div>
                       </div>
                       <div class="extra content">
                         <div class="center aligned author">
-                          <img class="ui avatar image" src="https://semantic-ui.com/images/avatar/small/jenny.jpg">
-                          Jenny
+                          <img class="ui avatar image" style="width: 35px;height: 35px;object-fit: cover;" :src="item.photo">
+                          {{item.name}}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="column" v-for="(item, index) in friends.slice(3, 6)">
+                    <div class="ui card" style="display:inline-block">
+                      <div class="content">
+                        <div class="center aligned header"><a :href="'http://'+item.web">{{item.web}}</a></div>
+                        <div class="center aligned description">
+                          <p>{{item.introduce}}</p>
+                        </div>
+                      </div>
+                      <div class="extra content">
+                        <div class="center aligned author">
+                          <img class="ui avatar image" style="width: 35px;height: 35px;object-fit: cover;" :src="item.photo">
+                          {{item.name}}
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <el-pagination background layout="prev, pager, next" :total="20"
-                style="text-align: center;margin-top: 20px;">
+              <el-pagination @current-change="handleFriendCurrentChange" :current-page="friendstotal.cur" background layout="prev, pager, next" :page-size="friendstotal.size" :total="friendstotal.total"
+                             style="text-align: center;margin-top: 20px;">
               </el-pagination>
             </div>
 
@@ -159,12 +174,136 @@ export default {
         password: "XingHui",
         pro: 2,
         hide: 0
-      }
+      },
+      Usermsg:[
+        {
+          id:0,
+          username: 'aaaa',
+          information: {
+            photo: 'http://localhost:80/Information/photo/woc.jpg'
+          }
+        }
+      ],
+      Blogmsg:[
+        {
+          id:0,
+          title: 'aaaa',
+          background:'',
+          lastdate:'',
+          classname:'',
+          username: ''
+        }
+      ],
+      Blogtotal:{
+        total:1,
+        cur:1,
+        size:5,
+      },
+      Usermsgtotal:{
+        total:1,
+        cur:1,
+        size:4,
+      },
+      friendstotal:{
+        total:1,
+        cur:1,
+        size:4,
+      },
+      friends:[
+        {
+          name : "woc",
+          introduce:'自我介绍',
+          web:'www.baidu.com',
+          photo:"http://localhost:80/friend/photo/XingHuiSama.jpg"
+        },
+        {
+          name : "woc",
+          introduce:'自我介绍',
+          web:'www.baidu.com',
+          photo:"http://localhost:80/friend/photo/XingHuiSama.jpg"
+        },
+        {
+          name : "woc",
+          introduce:'自我介绍',
+          web:'www.baidu.com',
+          photo:"http://localhost:80/friend/photo/XingHuiSama.jpg"
+        },{
+          name : "woc",
+          introduce:'自我介绍',
+          web:'www.baidu.com',
+          photo:"http://localhost:80/friend/photo/XingHuiSama.jpg"
+        },
+        {
+          name : "woc",
+          introduce:'自我介绍',
+          web:'www.baidu.com',
+          photo:"http://localhost:80/friend/photo/XingHuiSama.jpg"
+        }
+      ]
     }
   },
+  created () {
+    this.GetBlogArt(1,5);
+    this.GetBlogUser(1,4);
+    this.GetFriendUser(1,6);
+  },
   methods: {
-    PersonCenter(){
-      this.$router.replace("/person").catch(err => err);
+    async GetFriendUser(cur,size){
+      var msgall = this;
+      msgall =await axios.get(this.serverUrl+'/friends'+'/'+cur+'/'+size).then(
+        (res) =>{
+          return res.data.data;
+        }
+      )
+      this.friends = msgall.records;
+      this.friendstotal.cur = msgall.current;
+      this.friendstotal.size = msgall.size;
+      this.friendstotal.total = msgall.total;
+    },
+    async GetBlogUser(cur,size){
+      var msgall = this;
+      msgall =await axios.get(this.serverUrl+'/Userregister'+'/'+cur+'/'+size).then(
+        (res) =>{
+          return res.data.data;
+        }
+      )
+      var msg = msgall.records;
+      for (var i = 0;i<msg.length;i++){
+        msg[i].information = await axios.get(this.serverUrl+'/Userdetial'+'/'+msg[i].id).then(
+          rest =>{
+            return rest.data.data;
+          }
+        )
+      }
+      this.Usermsgtotal.total = msgall.total;
+      this.Usermsgtotal.cur = msgall.current;
+      this.Usermsgtotal.size = msgall.size;
+      this.Usermsg = msg;
+    },
+    async GetBlogArt(cur,size){
+      var msgall = this;
+      msgall =await axios.get(this.serverUrl+'/Blogsimple'+'/'+cur+'/'+size).then(
+        (res) =>{
+          return res.data.data;
+        }
+      )
+      var msg = msgall.records;
+      for (var i = 0;i<msgall.records.length;i++){
+        msgall.records[i].username = await axios.get(this.serverUrl+'/Userregister'+'/'+msgall.records[i].userid).then(
+          (res) =>{
+            return res.data.data.username;
+          })
+        this.Blogtotal.total = msgall.total;
+        this.Blogtotal.cur = msgall.current;
+        this.Blogtotal.size = msgall.size;
+      }
+      this.Blogmsg = msg;
+    },
+    PersonCenter(item){
+      this.$router.push({
+        path:"/person",
+        query:{data:JSON.stringify(item.id)}
+      }).catch(err => err);
     },
     changeClass(i) {
       this.isActive = i;
@@ -199,6 +338,15 @@ export default {
           console.error(err);
         })
       console.log("发送成功")
+    },
+    handleCurrentChange(index){
+      this.GetBlogUser(index,this.Usermsgtotal.size);
+    },
+    handleBlogCurrentChange(index){
+      this.GetBlogArt(index,this.Blogtotal.size);
+    },
+    handleFriendCurrentChange(index){
+      this.GetFriendUser(index,this.friendstotal.size);
     }
   }
 }

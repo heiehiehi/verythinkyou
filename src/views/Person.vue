@@ -8,7 +8,7 @@
             <div class="row">
               <div class="three wide column">
                 <div>
-                  <person-simple></person-simple>
+                  <person-simple :simple="this.item" :isself="this.self"></person-simple>
                 </div>
               </div>
               <div class="thirteen wide column">
@@ -79,6 +79,49 @@ export default {
     PersonSimple,
     PersonIntro,
     PersonDy
+  },
+  data(){
+    return{
+      id:null,
+      item:{
+        usermsg:null,
+        userinfo:null,
+      },
+      self:false,
+    }
+  },
+  beforeCreate() {
+    // console.log(this.item);
+  },
+  created () {
+    this.id = JSON.parse(this.$route.query.data);
+    if (this.id!=this.$store.state.datas.user.id){
+      this.self = false;
+    }
+    else {
+      this.self = true;
+    }
+    console.log(this.id);
+    this.GetAllinfromation()
+    console.log(this.id);
+    console.log(id+'woca');
+  },
+  methods: {
+    getInformation(){
+      console.log(this.item);
+    },
+    async GetAllinfromation(){
+      var usermsg = await axios.get(this.serverUrl+'/Userregister'+'/'+this.id).then(
+        (res) =>{
+          return res.data.data;
+        })
+      var userinfo = await axios.get(this.serverUrl+'/Userdetial'+'/'+this.id).then(
+        (res) =>{
+          return res.data.data;
+        })
+      this.item.usermsg = usermsg;
+      this.item.userinfo =userinfo;
+    }
   }
 }
 </script>

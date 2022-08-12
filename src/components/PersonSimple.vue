@@ -2,7 +2,7 @@
   <div class="hello">
     <div class="ui special cards">
       <div class="card">
-        <a class="ui red right corner label" @click="starteditor">
+        <a class="ui red right corner label" v-if="isself" @click="starteditor">
           <i class="icon" :class="{save:false === editor,close:true === editor}"></i>
         </a>
         <div class="blurring dimmable image">
@@ -14,34 +14,36 @@
             </div>
           </div>
           <el-upload
-            class="avatar-uploader"
+            class="avatar-uploader img-divs"
             v-if="editor"
             action="https://jsonplaceholder.typicode.com/posts/"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload">
-            <img v-if="true" src="../../image/www.jpg" style="margin-bottom:-5px;width: 100%;border-radius: 6px;filter: opacity(40%)">
+            <img v-if="true" :src="this.simples.userinfo.photo" style="margin-bottom:-5px;width: 100%;object-fit: cover;;border-radius: 6px;filter: opacity(40%)">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
-          <img v-if="!editor" src="../../image/www.jpg">
+          <div class="img-divs" v-if="!editor">
+            <img style="object-fit: cover;" :src="this.simples.userinfo.photo">
+          </div>
         </div>
         <div class="content">
-          <a class="header">笨蛋小刘</a>
+          <a class="header">{{this.simples.usermsg.username}}</a>
           <div class="meta">
-            <span class="date">Created in Sep 2022</span>
+            <span class="date">创建时间: {{this.simples.userinfo.creatdate}}</span>
           </div>
           <div class="ui form" v-if="editor">
             <div class="field" style="text-align: left">
               <label>自我介绍</label>
-              <textarea rows="2">笨蛋小刘是一只居住在赣州的大憨猪，她喜爱小猫、音乐和派对。 </textarea>
+              <textarea rows="2"></textarea>
             </div>
           </div>
-          <div class="description" v-if="!editor">笨蛋小刘是一只居住在赣州的大憨猪，她喜爱小猫、音乐和派对。 </div>
+          <div class="description" v-if="!editor">{{this.simples.userinfo.introduction}}</div>
         </div>
         <div class="extra content">
           <a>
             <i class="book icon"></i>
-            2 篇
+            {{this.simples.userinfo.blog}} 篇
           </a>
         </div>
         <div class="ui buttons" v-if="editor">
@@ -57,16 +59,32 @@
 <script>
 export default {
   name: 'PersonSimple',
-  props: {
-    msg: String
+  props: ['simple','isself'],
+  created(){
+    // console.log(props.simple)
+    // console.log('aaaaa')
+    this.simples = this.simple
+    this.isselfs = this.isself
   },
   data(){
     return{
       editor:false,
-      imageUrl: ''
+      imageUrl: '',
+      datas:null,
+      simples:null,
+      isselfs:false,
+    }
+  },
+  watch:{
+    photoList: function (newData) {
+      this.datas = newData
+      this.kkknd(this.datas)
     }
   },
   methods:{
+    kkknd(){
+      console.log(this.datas)
+    },
     updateandcancel(){
       this.editor = false;
     },
@@ -99,7 +117,22 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style lang="less" scoped>
+.img-divs {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 100%;
+  img{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+  }
+}
+
+
 .avatar-uploader .el-upload {
   border: 1px dashed #d9d9d9;
   border-radius: 6px;
