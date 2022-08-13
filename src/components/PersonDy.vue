@@ -1,6 +1,6 @@
 <template>
   <div class="hello">
-    <div class="ui feed column" style="background: white;padding: 8px;margin-right: -12px;margin-top: 0px">
+    <div class="ui feed column" style="border-radius: 5px;background: white;padding: 8px;margin-right: -12px;margin-top: 0px">
       <div class="event" v-for="count in 5">
         <div class="label">
           <img src="../../image/www.jpg">

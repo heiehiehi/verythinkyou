@@ -293,10 +293,10 @@ export default {
           (res) =>{
             return res.data.data.username;
           })
-        this.Blogtotal.total = msgall.total;
-        this.Blogtotal.cur = msgall.current;
-        this.Blogtotal.size = msgall.size;
       }
+      this.Blogtotal.total = msgall.total;
+      this.Blogtotal.cur = msgall.current;
+      this.Blogtotal.size = msgall.size;
       this.Blogmsg = msg;
     },
     PersonCenter(item){

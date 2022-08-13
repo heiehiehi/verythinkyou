@@ -65,6 +65,8 @@ export default {
     // console.log('aaaaa')
     this.simples = this.simple
     this.isselfs = this.isself
+    console.log('aaaaa')
+    console.log(this.simples)
   },
   data(){
     return{

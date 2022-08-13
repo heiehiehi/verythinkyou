@@ -1,25 +1,25 @@
 <template>
   <div class="hello">
     <div class="ui raised card">
-      <a class="ui red right corner label" @click="starteditor">
+      <a class="ui red right corner label" v-if="this.issel" @click="starteditor">
         <i class="icon" :class="{save:false === editor,close:true === editor}"></i>
       </a>
       <div class="content">
         <div class="header">自我介绍</div>
         <div class="ui divided selection list" v-if="editor" style="text-align: left">
           <a class="item">
-            <div class="ui red horizontal label">id号</div>{{this.information.id}}</a>
+            <div class="ui red horizontal label">id号</div>{{this.info.userinfo.id}}</a>
           <a class="item">
             <div class="ui purple horizontal label">生日</div><div class="block">
               <el-date-picker style="width: auto;padding-top: 4px"
-                v-model="inputbir"
+                v-model="this.info.userinfo.birthday"
                 type="date"
                 placeholder="选择日期">
               </el-date-picker>
             </div>
           </a>
           <a class="item">
-            <div class="ui blue horizontal label">创建日期</div>{{this.information.creattime}} </a>
+            <div class="ui blue horizontal label">创建日期</div>{{this.info.userinfo.creatdate}} </a>
           <a class="item">
             <div class="ui green label">性别</div><el-select v-model="value" placeholder="请选择" style="width: auto;padding-top: 4px">
             <el-option
@@ -31,7 +31,7 @@
             </el-option>
           </el-select></a>
           <a class="item">
-            <div class="ui yellow horizontal label">学校</div><el-input v-model="input" placeholder="请输入内容" style="width: 100%;padding-top: 4px"></el-input></a>
+            <div class="ui yellow horizontal label">学校</div><el-input v-model="this.info.userinfo.school" placeholder="请输入内容" style="width: 100%;padding-top: 4px"></el-input></a>
 
           <div style="text-align: center">
             <el-upload
@@ -40,7 +40,7 @@
               :show-file-list="false"
               :on-success="handleAvatarSuccess"
               :before-upload="beforeAvatarUpload">
-              <img v-if="true" src="../../image/www.jpg" style="margin-top:10px;width: 80%;border-radius: 6px;filter: opacity(40%)">
+              <img v-if="true" :src="this.info.userinfo.spacebg?this.info.userinfo.spacebg:'../../image/www.jpg'" style="margin-top:10px;width: 80%;border-radius: 6px;filter: opacity(40%)">
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
           </div>
@@ -48,15 +48,15 @@
         </div>
         <div class="ui divided selection list" v-if="!editor" style="text-align: left;">
           <a class="item">
-            <div class="ui red horizontal label">id号</div>{{this.information.id}}</a>
+            <div class="ui red horizontal label">id号</div>{{this.info.userinfo.id}}</a>
           <a class="item">
-            <div class="ui purple horizontal label">生日</div>{{this.information.birthday}} </a>
+            <div class="ui purple horizontal label">生日</div>{{this.info.userinfo.birthday}} </a>
           <a class="item">
-            <div class="ui blue horizontal label">创建日期</div>{{this.information.creattime}} </a>
+            <div class="ui blue horizontal label">创建日期</div>{{this.info.userinfo.creatdate}} </a>
           <a class="item">
-            <div class="ui green label">性别</div>{{this.information.sex}}</a>
+            <div class="ui green label">性别</div>{{this.info.userinfo.sex}}</a>
           <a class="item">
-            <div class="ui yellow horizontal label">学校</div>{{this.information.school}}</a>
+            <div class="ui yellow horizontal label">学校</div>{{this.info.userinfo.school}}</a>
         </div>
       </div>
       <div class="extra content">
@@ -85,8 +85,9 @@
 <script>
 export default {
   name: 'PersonIntro',
-  props: {
-    msg: String
+  props: ['infos','issel'],
+  created () {
+    this.info = this.infos;
   },
   data(){
     return{
@@ -97,6 +98,7 @@ export default {
       }, {
         value: '未知',
       }],
+      info:null,
       value: '',
       editor:false,
       imageUrl:'',
