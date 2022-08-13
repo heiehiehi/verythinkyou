@@ -74,9 +74,8 @@
               </div>
               <div class="three wide column">
                 <div>
-                  <PersonDy></PersonDy>
+                  <PersonDy :usermsgsandinfo="this.item" :userid="this.id" :isselfo="(this.have)&&this.self"></PersonDy>
                 </div>
-
               </div>
             </div>
           </div>
@@ -162,7 +161,6 @@ export default {
       this.Blogtotal.total = usermsg.total;
       this.Blogtotal.cur = usermsg.current;
       this.Blogtotal.size = usermsg.size;
-      console.log(this.Blogtotal);
 
       if (first){
         if (this.blogs.records.length>0){

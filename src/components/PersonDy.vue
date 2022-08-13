@@ -1,25 +1,26 @@
 <template>
   <div class="hello">
     <div class="ui feed column" style="border-radius: 5px;background: white;padding: 8px;margin-right: -12px;margin-top: 0px">
-      <div class="event" v-for="count in 5">
+      <h3 style="color: black;margin-bottom: 20px" v-if="dynamic.length==0">这里什么都木有哦~</h3>
+      <div class="event" v-for="(i, index) in this.dynamic.slice(0, 5)">
         <div class="label">
-          <img src="../../image/www.jpg">
+          <img style="width: 40px;height: 40px;object-fit: cover;" :src="usermsg.userinfo.photo">
         </div>
         <div class="content">
           <div class="summary">
             <a class="user">
-              {{name}}
+              {{usermsg.usermsg.username}}
             </a> 发布动态
-            <div class="date" >{{time}} </div>
+            <div class="date" >{{i.creattime}} </div>
           </div>
           <div class="extra text">
-            {{context}}
+            {{i.context}}
           </div>
           <div class="meta">
             <a class="like">
-              <i class="like icon"></i> 4 Likes
+              <i class="like icon"></i> {{i.like}} Likes
             </a>
-            <div class="ui label" v-if="deleted">
+            <div class="ui label" v-if="deleted&&have">
               <a>
                 <i class="delete icon"></i> 删除
               </a>
@@ -27,10 +28,10 @@
           </div>
         </div>
       </div>
-      <el-pagination background layout="prev, pager, next" :total="20"
+      <el-pagination @current-change="HandleCurrentChange" :current-page="dynamics.cur" background layout="prev, pager, next" :page-size="dynamics.size" :total="dynamics.total"
                      style="text-align: center;margin:auto;margin-bottom: 10px">
       </el-pagination>
-      <div v-if="deleted">
+      <div v-if="deleted&&this.have" >
         <el-radio-group v-model="direction">
         </el-radio-group>
         <button @click="drawer = true" style="margin-left: 16px;" class="ui purple button">戳我写新动态哦~~</button>
@@ -63,25 +64,70 @@
 <script>
 export default {
   name: 'PersonDy',
-  props: {
-    msg: String
+  props: ['usermsgsandinfo','userid','isselfo'],
+  created () {
+    console.log(this.usermsg)
+    this.getALLDy(1,5);
+  },
+  watch:{
+    usermsgsandinfo(val){
+      this.usermsg = val;
+      this.name = val.usermsg.username
+    },
+    userid(val){
+      this.userids = val;
+    },
+    isselfo(val){
+      this.have = val;
+    },
   },
   data(){
     return{
+      userids:this.userid,
+      usermsg:this.usermsgsandinfo,
+      have:this.isselfo,
       deleted:true,
       editor:false,
       imageUrl: '',
-      name:'笨蛋小刘',
+      name:'??',
       time:'2022-07-31 12:38:19',
       context:"我真的是服了你这个老六啊",
       drawer: false,
       direction: 'rtl',
       msg:{
         textarea2:''
+      },
+      dynamic:[
+        {
+          id: 1
+        },
+        {
+          id: 2
+        },
+      ],
+      dynamics:{
+        total:5,
+        cur:1,
+        size:5,
       }
     }
   },
   methods:{
+    HandleCurrentChange(index){
+      this.getALLDy(index,this.dynamics.size);
+    },
+    async getALLDy(cur,size){
+      var usermsg = await axios.get(this.serverUrl+'/dynamicALL'+'/'+this.userids+'/'+cur+'/'+size).then(
+        (res) =>{
+          console.log(res.data.data)
+          return res.data.data;
+        })
+      this.dynamic = usermsg.records;
+      console.log(this.dynamic)
+      this.dynamics.total = usermsg.total;
+      this.dynamics.cur = usermsg.current;
+      this.dynamics.size = usermsg.size;
+    },
     updateandcancel(){
       this.editor = false;
     },

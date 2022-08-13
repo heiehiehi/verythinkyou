@@ -78,9 +78,6 @@ export default {
   name: 'BlogContext',
   props: ['infomations','have'],
   created () {
-    setTimeout
-    console.log(this.infomations);
-    console.log(this.have);
     this.info = this.infomations;
   },
   watch:{
@@ -88,7 +85,6 @@ export default {
       this.info = val;
       this.textarea2 = this.info.context;
       this.title = this.info.title;
-      console.log(val)
     },
   },
   data(){
