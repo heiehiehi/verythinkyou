@@ -89,11 +89,14 @@ export default {
       this.$router.replace("/signin")
     },
     intoPersonCenter(){
+
       this.$router.push({
         path:"/person",
         query:{data:JSON.stringify(this.$store.state.datas.user.id)}
-      }).catch(err => err);
-      location.reload();
+      }).catch(err => err)
+      if (this.$route.path=='/person') {
+        location.reload();
+      }
     },
     exit(){
       this.login = false;

@@ -16,11 +16,11 @@
           <el-upload
             class="avatar-uploader img-divs"
             v-if="editor"
-            action="https://jsonplaceholder.typicode.com/posts/"
+            action=""
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload">
-            <img v-if="true" :src="this.simples.userinfo.photo" style="margin-bottom:-5px;width: 100%;object-fit: cover;;border-radius: 6px;filter: opacity(40%)">
+            <img v-if="true" :src="this.submit.photo" style="margin-bottom:-5px;width: 100%;object-fit: cover;border-radius: 6px;filter: opacity(40%)">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
           <div class="img-divs" v-if="!editor">
@@ -35,7 +35,7 @@
           <div class="ui form" v-if="editor">
             <div class="field" style="text-align: left">
               <label>自我介绍</label>
-              <textarea rows="2"></textarea>
+              <textarea rows="2" v-model="introduction"></textarea>
             </div>
           </div>
           <div class="description" v-if="!editor">{{this.simples.userinfo.introduction}}</div>
@@ -65,6 +65,9 @@ export default {
     // console.log('aaaaa')
     this.simples = this.simple
     this.isselfs = this.isself
+    this.submit.photo = this.simples.userinfo.photo
+    this.submit.introduction = this.simples.userinfo.introduction
+    this.submit.id = this.simples.userinfo.id
     console.log('aaaaa')
     console.log(this.simples)
   },
@@ -75,20 +78,70 @@ export default {
       datas:null,
       simples:null,
       isselfs:false,
+      introduction:null,
+      submit:{
+        id:null,
+        introduction:'',
+        photo:'',
+      },
+      fileList: null,
     }
   },
   watch:{
     photoList: function (newData) {
       this.datas = newData
-      this.kkknd(this.datas)
     }
   },
   methods:{
+    uploadFile(){
+      console.log("这里是上传")
+    },
     kkknd(){
       console.log(this.datas)
     },
     updateandcancel(){
       this.editor = false;
+      let formdata = new FormData();
+      formdata.append("file",this.fileList);
+      formdata.append("token",this.$store.state.datas.token);
+      var msg = this.submit;
+      msg.introduction = this.introduction
+      msg.photo = this.simples.userinfo.photo
+      const json = JSON.stringify(msg);
+      formdata.append("information",new Blob([json], {type: 'application/json'}));
+      let config = {
+        'Content-Type': 'multipart/form-data'
+      }
+      axios.post(this.serverUrl+'/Userdetial'+'/'+msg.id,formdata,config).then(
+        res=>{
+          if (res.data.status==200){
+            this.$notify({
+              title: '成功',
+              message: '恭喜你更新信息成功哦',
+              type: 'success'
+            });
+          }
+          console.log(res)
+        }
+      )
+
+      if (this.fileList!=null){
+        axios.post(this.serverUrl+'/Userdetial',formdata,config).then(
+          res=>{
+            if (res.data.status==200){
+              this.$notify({
+                title: '成功',
+                message: '恭喜你上传头像成功哦',
+                type: 'success'
+              });
+              this.fileList = null;
+            }
+          }
+        )
+        this.simples.userinfo.photo = this.submit.photo
+      }
+      this.simples.userinfo.introduction = this.introduction
+
     },
     cancelediter(){
       this.editor = false;
@@ -103,15 +156,16 @@ export default {
     beforeAvatarUpload(file) {
       const isJPG = file.type === 'image/jpeg';
       const isLt2M = file.size / 1024 / 1024 < 2;
-
+      this.fileList=file
+      // console.log(file)
+      // console.log(this.submit.photo);
       if (!isJPG) {
         this.$message.error('上传头像图片只能是 JPG 格式!');
       }
       if (!isLt2M) {
         this.$message.error('上传头像图片大小不能超过 2MB!');
       }
-      this.imageUrl = URL.createObjectURL(file.raw);
-      console.log(this.imageUrl);
+      this.submit.photo = URL.createObjectURL(file);
       return isJPG && isLt2M;
     }
   }

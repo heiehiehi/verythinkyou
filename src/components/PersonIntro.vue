@@ -12,7 +12,7 @@
           <a class="item">
             <div class="ui purple horizontal label">生日</div><div class="block">
               <el-date-picker style="width: auto;padding-top: 4px"
-                v-model="this.info.userinfo.birthday"
+                v-model="information.birthday"
                 type="date"
                 placeholder="选择日期">
               </el-date-picker>
@@ -21,7 +21,7 @@
           <a class="item">
             <div class="ui blue horizontal label">创建日期</div>{{this.info.userinfo.creatdate}} </a>
           <a class="item">
-            <div class="ui green label">性别</div><el-select v-model="value" placeholder="请选择" style="width: auto;padding-top: 4px">
+            <div class="ui green label">性别</div><el-select v-model="information.sex" placeholder="请选择" style="width: auto;padding-top: 4px">
             <el-option
               v-for="item in sexs"
               :key="item.value"
@@ -31,16 +31,16 @@
             </el-option>
           </el-select></a>
           <a class="item">
-            <div class="ui yellow horizontal label">学校</div><el-input v-model="this.info.userinfo.school" placeholder="请输入内容" style="width: 100%;padding-top: 4px"></el-input></a>
+            <div class="ui yellow horizontal label">学校</div><el-input v-model="information.school" placeholder="请输入内容" style="width: 100%;padding-top: 4px"></el-input></a>
 
           <div style="text-align: center">
             <el-upload
               class="avatar-uploader"
-              action="https://jsonplaceholder.typicode.com/posts/"
+              action=""
               :show-file-list="false"
               :on-success="handleAvatarSuccess"
               :before-upload="beforeAvatarUpload">
-              <img v-if="true" :src="this.info.userinfo.spacebg?this.info.userinfo.spacebg:'../../image/www.jpg'" style="margin-top:10px;width: 80%;border-radius: 6px;filter: opacity(40%)">
+              <img v-if="true" :src="photo?photo:'../../image/www.jpg'" style="margin-top:10px;width: 80%;border-radius: 6px;filter: opacity(40%)">
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
           </div>
@@ -88,6 +88,11 @@ export default {
   props: ['infos','issel'],
   created () {
     this.info = this.infos;
+    this.information.id = this.info.usermsg.id;
+    this.information.birthday = this.info.userinfo.birthday;
+    this.information.school = this.info.userinfo.school;
+    this.information.sex = this.info.userinfo.sex;
+    this.photo = this.info.userinfo.spacebg;
   },
   data(){
     return{
@@ -106,16 +111,99 @@ export default {
       imglist:[],
       information:{
         id:1,
-        birthday:20011114,
+        birthday:'',
         creattime:'2022-07-22',
-        sex:'女',
-        school:'清华大学'
-      }
+        sex:'',
+        school:'',
+      },
+      photo:null,
+      fileList:null,
     }
   },
   methods:{
-    updateandcancel(){
+    checkTime(i) {//时间
+      if (i < 10) {
+        i = "0" + i
+      }
+      return i;
+    },
+    checkTime2(i){
+      if (i<10){
+        return '0'+i;
+      }
+      return i;
+    },
+    async updateandcancel(){
       this.editor = false;
+      if ((typeof this.information.birthday)!='string'){
+        var date_value = this.information.birthday.getFullYear() + '-' + this.checkTime2(this.information.birthday.getMonth() + 1) + '-' + this.information.birthday.getDate()
+          + ' ' + this.checkTime(this.information.birthday.getHours()) + ':' + this.checkTime(this.information.birthday.getMinutes()) + ':' + this.checkTime(this.information.birthday.getSeconds());
+        console.log(typeof this.information.birthday)
+        this.information.birthday = date_value
+      }
+      // var date = this.information.birthday.getFullYear()+'-'+(this.information.birthday.getMonth()+1);
+      // console.log(typeof this.information.birthday)
+
+      let formdata = new FormData();
+      formdata.append("token",this.$store.state.datas.token);
+      var msg = this.information;
+      if (msg.sex=='男'){
+        msg.sex = 1;
+      }
+      else if (msg.sex=='女'){
+        msg.sex = 2;
+      }
+      else {
+        msg.sex = 0;
+      }
+      const json = JSON.stringify(msg);
+      formdata.append("information",new Blob([json], {type: 'application/json'}));
+      let config = {
+        'Content-Type': 'multipart/form-data'
+      }
+
+      if (this.fileList!=null){
+        formdata.append('file',this.fileList)
+        var status = await axios.post(this.serverUrl+'/Userbg',formdata,config).then(
+          res=>{
+            return res.data.status
+          }
+        )
+        if (status == 200){
+          this.$notify({
+            title: '成功',
+            message: '恭喜你上传背景成功哦',
+            type: 'success'
+          });
+          this.fileList = null;
+          this.info.userinfo.spacebg = this.photo;
+        }
+
+      }
+
+      axios.post(this.serverUrl+'/Userdetial'+'/'+msg.id,formdata,config).then(
+        res=>{
+          if (res.data.status==200){
+            this.$notify({
+              title: '成功',
+              message: '恭喜你更新信息成功哦',
+              type: 'success'
+            });
+          }
+        }
+      )
+      this.info.usermsg.id = this.information.id;
+      this.info.userinfo.birthday =  this.information.birthday;
+      this.info.userinfo.school = this.information.school;
+      if (this.information.sex == 1){
+        this.info.userinfo.sex = '男'
+      }
+      else if (this.information.sex == 2){
+        this.info.userinfo.sex = '女'
+      }
+      else if (this.information.sex == 0){
+        this.info.userinfo.sex = '未知'
+      }
     },
     cancelediter(){
       this.editor = false;
@@ -130,15 +218,17 @@ export default {
     beforeAvatarUpload(file) {
       const isJPG = file.type === 'image/jpeg';
       const isLt2M = file.size / 1024 / 1024 < 2;
-
+      this.fileList=file
+      console.log(file)
+      console.log(this.fileList);
       if (!isJPG) {
         this.$message.error('上传头像图片只能是 JPG 格式!');
       }
       if (!isLt2M) {
         this.$message.error('上传头像图片大小不能超过 2MB!');
       }
-      this.imageUrl = URL.createObjectURL(file.raw);
-      console.log(this.imageUrl);
+      this.photo = URL.createObjectURL(file);
+      console.log(this.photo);
       return isJPG && isLt2M;
     }
   }
