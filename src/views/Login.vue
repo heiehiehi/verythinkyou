@@ -69,13 +69,67 @@ export default {
       user:{
         phone:'',
         password:'',
-      }
+      },
+      newblog:{
+        userid:'',
+        title:'',
+        context:'',
+      },
 
     }
   },
   methods:{
+    async Keepandcancel(){
+      console.log("???sss")
+      this.newblog.title = '欢迎使用这个博客系统哦~~';
+      this.newblog.context = '诶嘿~~';
+      this.newblog.userid = this.$store.state.datas.user.id;
+
+      var msg = this.newblog
+      let formdata = new FormData();
+      formdata.append("token",this.$store.state.datas.token);
+      const json = JSON.stringify(msg);
+      formdata.append("blog",new Blob([json], {type: 'application/json'}));
+      let config = {
+        'Content-Type': 'multipart/form-data'
+      }
+
+      var status = await axios.post(this.serverUrl+'/blog'+'/'+msg.userid+'/'+msg.userid+'/'+msg.userid,formdata,config).then(
+        res=>{
+          if (res.data.status==200){
+            this.$notify({
+              title: '成功',
+              message: '恭喜你创建新博客哦',
+              type: 'success'
+            });
+          }
+          else if (res.data.status==401){
+            this.$notify.error({
+              title: '错误',
+              message: 'token错误请重新登录哦',
+              type: 'error'
+            });
+            this.$router.replace("/")
+            this.$store.dispatch('Deleteddata')
+          }
+          return res.data.status;
+        }
+      )
+    },
+    async getSingleAllBlog(cur,size,first){
+      var usermsg = await axios.get(this.serverUrl+'/Blogsimple'+'/'+this.$store.state.datas.user.id+'/'+cur+'/'+size).then(
+        (res) =>{
+          console.log(res.data.data)
+          return res.data.data;
+        })
+      if (usermsg==null||usermsg.total==0){
+        console.log('okk')
+        this.Keepandcancel();
+      }
+    },
     async login(){
       if (this.user.password&&this.user.phone){
+        this.user.password = this.$md5(this.user.password);
         var msg = await axios.post(this.serverUrl+'/UserSign',this.user).then(
           res =>{
             console.log(res)
@@ -87,6 +141,13 @@ export default {
               });
               return res.data.data;
             }
+            else {
+              this.$notify.error({
+                title: '错误',
+                message: '密码或者账号错误请重新登录哦',
+                type: 'error'
+              });
+            }
           }
         )
         var photo = await axios.get(this.serverUrl+'/Userdetial'+'/'+msg.user.id).then(
@@ -94,8 +155,11 @@ export default {
             return res.data.data.photo;
           }
         )
-        msg.user.photo = photo
+        msg.user.photo = photo;
         this.$store.commit('Keepdata',msg);
+
+        this.getSingleAllBlog(1,5,true);
+
         this.$router.replace("/")
       }
       else {

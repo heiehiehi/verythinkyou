@@ -7,7 +7,7 @@
         width="200"
         trigger="hover"
         content="点击创建新博客">
-        <a class="ui green left corner label" slot="reference" v-if="((!editor)||(editor&&creatednew))&&this.have" @click="starteditor();addnew();">
+        <a class="ui green left corner label" slot="reference" v-if="((!editor)||(editor&&creatednew))&&haves" @click="starteditor();addnew();">
           <i class=" icon"  :class="{plus:false === editor,close:true === editor}"></i>
         </a>
       </el-popover>
@@ -93,15 +93,25 @@ export default {
   name: 'BlogContext',
   props: ['infomations','have'],
   created () {
-    this.info = this.infomations;
+    if (this.infomations!=null){
+      this.info = this.infomations;
+    }
+    console.log(this.infomations)
+    console.log(((!this.editor)||(this.editor&&this.creatednew))&&this.haves)
   },
   watch:{
     infomations(val){
-      this.info = val;
-      this.textarea2 = this.info.context;
-      this.title = this.info.title;
-      this.oldphoto = this.info.background;
+      if (val!=null){
+        this.info = val;
+        this.textarea2 = this.info.context;
+        this.title = this.info.title;
+        this.oldphoto = this.info.background;
+      }
     },
+    have(val){
+      this.haves = val;
+      console.log(haves)
+    }
   },
   data(){
     return{
@@ -127,7 +137,8 @@ export default {
       oldfileList:null,
       photo:null,
       oldphoto:null,
-      staticphoto:'http://192.168.1.4:80/Blog/background/XingHui20220816173031.jpg'
+      staticphoto:'http://192.168.1.4:80/Blog/background/XingHui20220816173031.jpg',
+      haves:true
     }
   },
   methods:{
@@ -171,9 +182,8 @@ export default {
       this.creatednew = false;
       this.newblog.title = this.aftertitle;
       this.newblog.context = this.textarea1;
-      this.newblog.userid = this.info.userid;
+      this.newblog.userid = this.$store.state.datas.user.id;
 
-      console.log('kknd')
       var msg = this.newblog
       let formdata = new FormData();
       if (this.fileList!=null){
@@ -208,7 +218,6 @@ export default {
           return res.data.status;
         }
       )
-      console.log(this.newblog)
     },
     async updateandcancel(){
       this.editor = false;

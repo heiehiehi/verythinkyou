@@ -125,11 +125,15 @@ export default {
   },
   created () {
     this.id = JSON.parse(this.$route.query.data);
+    console.log(this.id)
+    console.log(this.$store.state.datas.user.id)
     if (this.id!=this.$store.state.datas.user.id){
       this.self = false;
+      console.log('???')
     }
     else {
       this.self = true;
+      console.log('???2')
     }
     this.GetAllinfromation()
 
@@ -154,9 +158,10 @@ export default {
     async getSingleDetBlog(id){
       var usermsg = await axios.get(this.serverUrl+'/blog'+'/'+id).then(
         (res) =>{
-          return res.data.data;
+          return res.data;
         })
-      this.showblog = usermsg;
+      console.log(usermsg)
+      this.showblog = usermsg.data;
     },
     async getSingleAllBlog(cur,size,first){
       var usermsg = await axios.get(this.serverUrl+'/Blogsimple'+'/'+this.id+'/'+cur+'/'+size).then(
@@ -172,6 +177,9 @@ export default {
       if (first){
         if (this.blogs.records.length>0){
           this.getSingleDetBlog(this.blogs.records[0].id);
+        }
+        else if(this.id==this.$store.state.datas.user.id){
+          this.have = true;
         }
         else {
           this.have = false;

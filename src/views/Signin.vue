@@ -89,6 +89,11 @@ export default {
         pro:'',
         hide:'',
       },
+      newblog:{
+        userid:'',
+        title:'',
+        context:'',
+      },
       username:'',
       phone:'',
       email:'',
@@ -147,8 +152,8 @@ export default {
           });
         }
         else {
-          console.log('???')
-          this.msg.password = this.password1;
+          console.log(this.$md5(this.password1))
+          this.msg.password = this.$md5(this.password1);
           this.msg.email = this.email;
           this.msg.username = this.username;
           this.msg.phone = this.phone;
