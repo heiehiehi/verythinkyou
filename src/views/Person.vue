@@ -43,7 +43,7 @@
                           <img class="ui avatar image" :src="item.userinfo.photo" style="object-fit: cover;"><span style="color: #8a8a8a;">{{item.usermsg.username}}</span>
                         </div>
                         <div class="ui medium image">
-                          <img :src="i.background" style="width: 100%;height: 150px;object-fit: cover;">
+                          <img :src="i.background?i.background:item.userinfo.spacebg" style="width: 100%;height: 150px;object-fit: cover;">
                         </div>
                         <div class="extra content">
                           <div class="ui divided selection list" style="text-align: left">
