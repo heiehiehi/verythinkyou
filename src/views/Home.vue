@@ -40,7 +40,7 @@
                       <img style="width: 100%;height: 64px;object-fit: cover;" :src="item.background">
                     </div>
                     <div class="content">
-                      <a class="header">{{item.title}}</a>
+                      <a class="header" @click="intopersoncenterandbyidfindblog(item)">{{item.title}}</a>
                       <div class="meta">
                         <span>{{item.lastdate}}</span>
                       </div>
@@ -248,6 +248,13 @@ export default {
     this.GetFriendUser(1,6);
   },
   methods: {
+    intopersoncenterandbyidfindblog(item){
+      this.$router.push({
+        path:"/person",
+        query:{data:JSON.stringify(item.userid),
+                showid:item.id}
+      }).catch(err => err);
+    },
     async GetFriendUser(cur,size){
       var msgall = this;
       msgall =await axios.get(this.serverUrl+'/friends'+'/'+cur+'/'+size).then(

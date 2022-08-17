@@ -99,7 +99,7 @@ export default {
     kkknd(){
       console.log(this.datas)
     },
-    updateandcancel(){
+    async updateandcancel(){
       this.editor = false;
       let formdata = new FormData();
       formdata.append("file",this.fileList);
@@ -112,7 +112,7 @@ export default {
       let config = {
         'Content-Type': 'multipart/form-data'
       }
-      axios.post(this.serverUrl+'/Userdetial'+'/'+msg.id,formdata,config).then(
+      var status = await axios.post(this.serverUrl+'/Userdetial'+'/'+msg.id,formdata,config).then(
         res=>{
           if (res.data.status==200){
             this.$notify({
@@ -121,12 +121,22 @@ export default {
               type: 'success'
             });
           }
-          console.log(res)
+          return res.data.status;
         }
       )
 
+      if (status == 401){
+        this.$notify.error({
+          title: '错误',
+          message: 'token错误请重新登录哦',
+          type: 'error'
+        });
+        this.$router.replace("/")
+        this.$store.dispatch('Deleteddata')
+      }
+
       if (this.fileList!=null){
-        axios.post(this.serverUrl+'/Userdetial',formdata,config).then(
+        status = await axios.post(this.serverUrl+'/Userdetial',formdata,config).then(
           res=>{
             if (res.data.status==200){
               this.$notify({
@@ -136,8 +146,19 @@ export default {
               });
               this.fileList = null;
             }
+            return res.data.status;
           }
         )
+
+        if (status == 401){
+          this.$notify.error({
+            title: '错误',
+            message: 'token错误请重新登录哦',
+            type: 'error'
+          });
+          this.$router.replace("/")
+          this.$store.dispatch('Deleteddata')
+        }
         this.simples.userinfo.photo = this.submit.photo
       }
       this.simples.userinfo.introduction = this.introduction

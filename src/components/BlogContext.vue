@@ -7,7 +7,7 @@
         width="200"
         trigger="hover"
         content="点击创建新博客">
-        <a class="ui green left corner label" slot="reference" v-if="(!editor)||(editor&&creatednew)" @click="starteditor();addnew();">
+        <a class="ui green left corner label" slot="reference" v-if="((!editor)||(editor&&creatednew))&&this.have" @click="starteditor();addnew();">
           <i class=" icon"  :class="{plus:false === editor,close:true === editor}"></i>
         </a>
       </el-popover>

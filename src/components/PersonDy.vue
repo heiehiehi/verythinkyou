@@ -21,7 +21,7 @@
               <i class="like icon"></i> {{i.like}} Likes
             </a>
             <div class="ui label" v-if="deleted&&have">
-              <a>
+              <a @click="deleteddy(i.id)">
                 <i class="delete icon"></i> 删除
               </a>
             </div>
@@ -51,7 +51,7 @@
                 v-model="textarea2">
               </el-input>
 
-              <button style="margin-top: 10px" class="positive ui button">保存动态</button>
+              <button style="margin-top: 10px" class="positive ui button" @click="addnewdy">保存动态</button>
             </div>
           </span>
         </el-drawer>
@@ -109,10 +109,78 @@ export default {
         total:5,
         cur:1,
         size:5,
-      }
+      },
+      newdy:{
+        userid:null,
+        context:null,
+      },
+      textarea2:null,
     }
   },
   methods:{
+    async deleteddy(id){
+      let formdata = new FormData();
+      formdata.append("token",this.$store.state.datas.token);
+      let config = {
+        'Content-Type': 'multipart/form-data'
+      }
+      var status = await axios.post(this.serverUrl+'/dynamicALL'+'/'+id,formdata,config).then(
+        res=>{
+          if (res.data.status==200){
+            this.$notify({
+              title: '成功',
+              message: '恭喜你删除动态成功哦',
+              type: 'success'
+            });
+          }
+          return res.data.status;
+        }
+      )
+      if (status == 401){
+        this.$notify.error({
+          title: '错误',
+          message: 'token错误请重新登录哦',
+          type: 'error'
+        });
+        this.$router.replace("/")
+        this.$store.dispatch('Deleteddata')
+      }
+      this.getALLDy(1,5);
+    },
+    async addnewdy(){
+      this.newdy.userid = this.userid;
+      this.newdy.context = this.textarea2;
+      var msg = this.newdy
+      let formdata = new FormData();
+      const json = JSON.stringify(msg);
+      formdata.append("token",this.$store.state.datas.token);
+      formdata.append("dynamic",new Blob([json], {type: 'application/json'}));
+      let config = {
+        'Content-Type': 'multipart/form-data'
+      }
+      var status = await axios.post(this.serverUrl+'/dynamicALL',formdata,config).then(
+        res=>{
+          if (res.data.status==200){
+            this.$notify({
+              title: '成功',
+              message: '恭喜你上传动态哦',
+              type: 'success'
+            });
+          }
+          return res.data.status;
+        }
+      )
+      if (status == 401){
+        this.$notify.error({
+          title: '错误',
+          message: 'token错误请重新登录哦',
+          type: 'error'
+        });
+        this.$router.replace("/")
+        this.$store.dispatch('Deleteddata')
+      }
+      this.getALLDy(1,5);
+    },
     HandleCurrentChange(index){
       this.getALLDy(index,this.dynamics.size);
     },

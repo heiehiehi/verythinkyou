@@ -132,7 +132,14 @@ export default {
       this.self = true;
     }
     this.GetAllinfromation()
-    this.getSingleAllBlog(1,6,true);
+
+    if (this.$route.query.showid!=null){
+      this.getSingleDetBlog(this.$route.query.showid);
+      this.getSingleAllBlog(1,6,false);
+    }
+    else {
+      this.getSingleAllBlog(1,6,true);
+    }
 
 
   },

@@ -178,10 +178,18 @@ export default {
           this.fileList = null;
           this.info.userinfo.spacebg = this.photo;
         }
-
+        else if (status == 401){
+          this.$notify.error({
+            title: '错误',
+            message: 'token错误请重新登录哦',
+            type: 'error'
+          });
+          this.$router.replace("/")
+          this.$store.dispatch('Deleteddata')
+        }
       }
 
-      axios.post(this.serverUrl+'/Userdetial'+'/'+msg.id,formdata,config).then(
+      var status = await axios.post(this.serverUrl+'/Userdetial'+'/'+msg.id,formdata,config).then(
         res=>{
           if (res.data.status==200){
             this.$notify({
@@ -189,9 +197,22 @@ export default {
               message: '恭喜你更新信息成功哦',
               type: 'success'
             });
+            return res.data.status;
           }
         }
       )
+
+      if (status == 401){
+        this.$notify.error({
+          title: '错误',
+          message: 'token错误请重新登录哦',
+          type: 'error'
+        });
+        this.$router.replace("/")
+        this.$store.dispatch('Deleteddata')
+      }
+
+
       this.info.usermsg.id = this.information.id;
       this.info.userinfo.birthday =  this.information.birthday;
       this.info.userinfo.school = this.information.school;
