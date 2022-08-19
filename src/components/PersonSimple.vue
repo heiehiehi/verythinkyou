@@ -43,7 +43,7 @@
         <div class="extra content">
           <a>
             <i class="book icon"></i>
-            {{this.simples.userinfo.blog}} 篇
+            {{this.blogcount}} 篇
           </a>
         </div>
         <div class="ui buttons" v-if="editor">
@@ -70,10 +70,12 @@ export default {
     this.submit.id = this.simples.userinfo.id
     console.log('aaaaa')
     console.log(this.simples)
+    this.getSingleAllBlog(1,6)
   },
   data(){
     return{
       editor:false,
+      blogcount:0,
       imageUrl: '',
       datas:null,
       simples:null,
@@ -93,6 +95,14 @@ export default {
     }
   },
   methods:{
+    async getSingleAllBlog(cur,size){
+      var usermsg = await axios.get(this.serverUrl+'/Blogsimple'+'/'+this.simple.userinfo.id+'/'+cur+'/'+size).then(
+        (res) =>{
+          console.log(res.data)
+          return res.data.data.total;
+        })
+        this.blogcount = usermsg;
+    },
     uploadFile(){
       console.log("这里是上传")
     },

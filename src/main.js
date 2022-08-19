@@ -10,7 +10,7 @@ Vue.use(ElementUI)
 
 Vue.prototype.$md5 = md5;
 Vue.config.productionTip = false
-Vue.prototype.serverUrl = 'http://192.168.1.4:80'
+Vue.prototype.serverUrl = 'http://192.168.1.2:80'
 
 new Vue({
   router,

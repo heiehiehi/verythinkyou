@@ -125,15 +125,11 @@ export default {
   },
   created () {
     this.id = JSON.parse(this.$route.query.data);
-    console.log(this.id)
-    console.log(this.$store.state.datas.user.id)
     if (this.id!=this.$store.state.datas.user.id){
       this.self = false;
-      console.log('???')
     }
     else {
       this.self = true;
-      console.log('???2')
     }
     this.GetAllinfromation()
 
@@ -160,7 +156,6 @@ export default {
         (res) =>{
           return res.data;
         })
-      console.log(usermsg)
       this.showblog = usermsg.data;
     },
     async getSingleAllBlog(cur,size,first){

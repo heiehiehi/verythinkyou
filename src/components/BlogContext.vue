@@ -7,7 +7,7 @@
         width="200"
         trigger="hover"
         content="点击创建新博客">
-        <a class="ui green left corner label" slot="reference" v-if="((!editor)||(editor&&creatednew))&&haves" @click="starteditor();addnew();">
+        <a class="ui green left corner label" slot="reference" v-if="((!editor)||(editor&&creatednew))&&this.have" @click="starteditor();addnew();">
           <i class=" icon"  :class="{plus:false === editor,close:true === editor}"></i>
         </a>
       </el-popover>
@@ -69,11 +69,11 @@
         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
       </el-upload>
       <el-upload v-if="editor&&(!creatednew)"
-        class="avatar-uploader"
-        action=""
-        :show-file-list="false"
-        :on-success="handleAvatarSuccess"
-        :before-upload="beforeoldAvatarUpload">
+                 class="avatar-uploader"
+                 action=""
+                 :show-file-list="false"
+                 :on-success="handleAvatarSuccess"
+                 :before-upload="beforeoldAvatarUpload">
         <img v-if="true" :src="oldphoto?oldphoto:staticphoto" style="margin-bottom:5px;width: 600px;height:300px;object-fit: cover;border-radius: 6px;filter: opacity(40%)">
         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
       </el-upload>
@@ -93,25 +93,15 @@ export default {
   name: 'BlogContext',
   props: ['infomations','have'],
   created () {
-    if (this.infomations!=null){
-      this.info = this.infomations;
-    }
-    console.log(this.infomations)
-    console.log(((!this.editor)||(this.editor&&this.creatednew))&&this.haves)
+    this.info = this.infomations;
   },
   watch:{
     infomations(val){
-      if (val!=null){
-        this.info = val;
-        this.textarea2 = this.info.context;
-        this.title = this.info.title;
-        this.oldphoto = this.info.background;
-      }
+      this.info = val;
+      this.textarea2 = this.info.context;
+      this.title = this.info.title;
+      this.oldphoto = this.info.background;
     },
-    have(val){
-      this.haves = val;
-      console.log(haves)
-    }
   },
   data(){
     return{
@@ -137,8 +127,7 @@ export default {
       oldfileList:null,
       photo:null,
       oldphoto:null,
-      staticphoto:'http://192.168.1.4:80/Blog/background/XingHui20220816173031.jpg',
-      haves:true
+      staticphoto:'http://192.168.1.4:80/Blog/background/XingHui20220816173031.jpg'
     }
   },
   methods:{
@@ -182,8 +171,9 @@ export default {
       this.creatednew = false;
       this.newblog.title = this.aftertitle;
       this.newblog.context = this.textarea1;
-      this.newblog.userid = this.$store.state.datas.user.id;
+      this.newblog.userid = this.info.userid;
 
+      console.log('kknd')
       var msg = this.newblog
       let formdata = new FormData();
       if (this.fileList!=null){
@@ -218,6 +208,7 @@ export default {
           return res.data.status;
         }
       )
+      console.log(this.newblog)
     },
     async updateandcancel(){
       this.editor = false;
@@ -319,3 +310,4 @@ a {
   color: #42b983;
 }
 </style>
+
